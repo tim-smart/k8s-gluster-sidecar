@@ -7,6 +7,9 @@ const podLabels = labelStringToObject(env.podLabels);
 const readToken = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token');
 const k8s = new Client({
   url: `https://${process.env.KUBERNETES_SERVICE_HOST}`,
+  auth: {
+    bearer: readToken.toString(),
+  },
 });
 export default k8s;
 
@@ -24,7 +27,7 @@ export function labelStringToObject(labels) {
 
 export function getGlusterPods() {
   return new Promise(function(resolve, reject) {
-    k8s.ns(env.myNamespace).pods.matchLabel(podLabels).get(function(err, pods) {
+    k8s.ns(env.myNamespace).po.matchLabels(podLabels).get(function(err, pods) {
       if (err) {
         return reject(err);
       }

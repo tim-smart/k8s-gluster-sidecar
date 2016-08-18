@@ -22,5 +22,5 @@ async function main() {
 };
 
 main().catch(function(err) {
-  throw err;
+  console.error(err.stack);
 });
