@@ -1,8 +1,5 @@
 import Client from 'node-kubernetes-client';
-import * as env from './env.js';
 import fs from 'fs';
-
-const podLabels = labelStringToObject(env.podLabels);
 
 const readToken = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token');
 const k8s = new Client({
@@ -39,7 +36,7 @@ function podContainsLabels(pod, labels) {
   return true;
 }
 
-export function getGlusterPods() {
+export function getPodsThatMatchLabels(labels) {
   return new Promise(function(resolve, reject) {
     k8s.pods.get(function(err, results) {
       if (err) {
@@ -59,7 +56,7 @@ export function getGlusterPods() {
 
         if (!podLabels) {
           matchingPods.push(pod);
-        } else if (podContainsLabels(pod, podLabels)) {
+        } else if (podContainsLabels(pod, labels)) {
           matchingPods.push(pod);
         }
       }
@@ -67,4 +64,4 @@ export function getGlusterPods() {
       resolve(matchingPods);
     });
   });
-};
+}

@@ -5,16 +5,13 @@ import * as env from './lib/env.js';
 import sleep from './lib/sleep.js';
 
 async function main() {
-  let leader = false;
-  let pods = [];
+
   while (true) {
-    pods = await k8s.getGlusterPods();
+    const pods = await k8s.getPodsThatMatchLabels(env.podLabels);
 
     if (!pods.length) {
       sleep(1000);
       continue;
-    } else if (pods[0].status.podIP === env.myIp) {
-      leader = true;
     }
     break;
   }
@@ -22,8 +19,10 @@ async function main() {
   readiness.start();
 
   while (true) {
+    // Poll every 5s
     await sleep(5000);
-    const pods = await k8s.getGlusterPods();
+
+    const pods = await k8s.getPodsThatMatchLabels(env.podLabels);
     if (pods.length <= 1) {
       continue;
     }
@@ -45,14 +44,17 @@ async function main() {
       }
     }
 
-    const nonBrickIps = await gluster.notYetBrickIps(env.volumeName, podIps);
+    const peerIps = await gluster.peerStatusIps();
+    if (!peerIps.length) {
+      continue;
+    }
+    const nonBrickIps = await gluster.notYetBrickIps(env.volumeName, peerIps);
     const nonBricks = nonBrickIps.map(ip => `${ip}:${env.brickPath}`);
 
     try {
       await gluster.run('volume', 'add-brick', env.volumeName, ...nonBricks);
     } catch (err) {
       console.error(err.stack);
-      break;
     }
   }
 };

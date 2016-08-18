@@ -28,6 +28,12 @@ export async function peerStatus() {
   return await parsePeerStatus(await run('peer', 'status'));
 }
 
+export async function peerStatusIps() {
+  return (
+    await parsePeerStatus(await run('peer', 'status'))
+  ).map(peer => peer.Hostname);
+}
+
 export async function notYetPeers(podIps) {
   const status = await peerStatus();
   const peerIps = status.map(peer => peer.Hostname);
