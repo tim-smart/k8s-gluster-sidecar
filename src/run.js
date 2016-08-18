@@ -17,6 +17,8 @@ async function main() {
   k8s.getGlusterPodsStream().on('data', function(pod) {
     console.error('New peer', pod);
   });
+
+  readiness.start();
 };
 
 main().catch(function(err) {
