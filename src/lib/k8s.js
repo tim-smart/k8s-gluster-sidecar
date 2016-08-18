@@ -55,7 +55,7 @@ export function getPodsThatMatchLabels(labels) {
           continue;
         }
 
-        if (!podLabels) {
+        if (!labels) {
           matchingPods.push(pod);
         } else if (podContainsLabels(pod, labels)) {
           matchingPods.push(pod);
