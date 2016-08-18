@@ -4,6 +4,8 @@ Creates the trusted storage pool and adds bricks to volumes automatically.
 
 Not much more at this stage.
 
+`docker run timsmart/k8s-gluster-sidecar`
+
 Ciao.
 
 
