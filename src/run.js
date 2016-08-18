@@ -29,7 +29,7 @@ async function main() {
     }
 
     // Make sure we have probed all the peers
-    const podIps = pods.map(pod => pod.status.podIP)
+    const podIps = pods.map(pod => pod.status.podIP);
     const nonPeers = await gluster.notYetPeers(podIps);
 
     for (const podIp of nonPeers) {
@@ -46,14 +46,13 @@ async function main() {
     }
 
     const nonBrickIps = await gluster.notYetBrickIps(env.volumeName, podIps);
+    const nonBricks = nonBrickIps.map(ip => `${ip}:${env.brickPath}`);
 
-    for (const podIp of nonBrickIps) {
-      try {
-        await gluster.run('volume', 'add-brick', env.volumeName, `${podIp}:${env.brickPath}`);
-      } catch (err) {
-        console.error(err.stack);
-        break;
-      }
+    try {
+      await gluster.run('volume', 'add-brick', env.volumeName, ...nonBricks);
+    } catch (err) {
+      console.error(err.stack);
+      break;
     }
   }
 };
