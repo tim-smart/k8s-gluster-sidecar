@@ -1,5 +1,6 @@
 import Client from 'node-kubernetes-client';
 import fs from 'fs';
+import * as env from './env.js';
 
 const readToken = fs.readFileSync('/var/run/secrets/kubernetes.io/serviceaccount/token');
 const k8s = new Client({

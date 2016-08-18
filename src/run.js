@@ -4,7 +4,7 @@ import * as gluster from './lib/gluster.js';
 import * as env from './lib/env.js';
 import sleep from './lib/sleep.js';
 
-const podLabels = gluster.labelStringToObject(env.podLabels);
+const podLabels = k8s.labelStringToObject(env.podLabels);
 
 async function main() {
 
