@@ -4,10 +4,12 @@ import * as gluster from './lib/gluster.js';
 import * as env from './lib/env.js';
 import sleep from './lib/sleep.js';
 
+const podLabels = gluster.labelStringToObject(env.podLabels);
+
 async function main() {
 
   while (true) {
-    const pods = await k8s.getPodsThatMatchLabels(env.podLabels);
+    const pods = await k8s.getPodsThatMatchLabels(podLabels);
 
     if (!pods.length) {
       sleep(1000);
@@ -22,7 +24,7 @@ async function main() {
     // Poll every 5s
     await sleep(5000);
 
-    const pods = await k8s.getPodsThatMatchLabels(env.podLabels);
+    const pods = await k8s.getPodsThatMatchLabels(podLabels);
     if (pods.length <= 1) {
       continue;
     }
