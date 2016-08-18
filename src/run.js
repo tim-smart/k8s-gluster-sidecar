@@ -21,8 +21,8 @@ async function main() {
   readiness.start();
 
   while (true) {
-    // Poll every 5s
-    await sleep(5000);
+    // Poll every 10s
+    await sleep(10000);
 
     const pods = await k8s.getPodsThatMatchLabels(podLabels);
     if (pods.length <= 1) {
@@ -31,29 +31,29 @@ async function main() {
 
     // Make sure we have probed all the peers
     const podIps = pods.map(pod => pod.status.podIP);
-    const nonPeers = await gluster.notYetPeers(podIps);
 
-    for (const podIp of nonPeers) {
-      if (podIp === env.myIp) {
+    try {
+      const nonPeers = await gluster.notYetPeers(podIps);
+
+      for (const podIp of nonPeers) {
+        if (podIp === env.myIp) {
+          continue;
+        }
+        await gluster.run('peer', 'probe', podIp);
+      }
+    } catch (err) {
+      console.error(err.stack);
+      continue;
+    }
+
+    try {
+      const peerIps = await gluster.peerStatusIps();
+      if (!peerIps.length) {
         continue;
       }
 
-      try {
-        await gluster.run('peer', 'probe', podIp);
-      } catch(err) {
-        console.error(err.stack);
-        break;
-      }
-    }
-
-    const peerIps = await gluster.peerStatusIps();
-    if (!peerIps.length) {
-      continue;
-    }
-    const nonBrickIps = await gluster.notYetBrickIps(env.volumeName, peerIps);
-    const nonBricks = nonBrickIps.map(ip => `${ip}:${env.brickPath}`);
-
-    try {
+      const nonBrickIps = await gluster.notYetBrickIps(env.volumeName, peerIps);
+      const nonBricks = nonBrickIps.map(ip => `${ip}:${env.brickPath}`);
       await gluster.run('volume', 'add-brick', env.volumeName, ...nonBricks);
     } catch (err) {
       console.error(err.stack);
