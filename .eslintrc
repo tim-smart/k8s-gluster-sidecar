@@ -1,0 +1,28 @@
+parser: "babel-eslint"
+
+env:
+  node: true
+  browser: true
+
+rules:
+  brace-style: 2
+  camelcase: 2
+  comma-style: 2
+  guard-for-in: 2
+  indent: [2, 2]
+  no-floating-decimal: 2
+  no-nested-ternary: 2
+  no-trailing-spaces: 2
+  no-undefined: 2
+  no-use-before-define: [2, "nofunc"]
+  prefer-template: 2
+  quotes: [2, "single", "avoid-escape"]
+  radix: 2
+  semi: [2, "always"]
+  space-before-function-paren: [2, "never"]
+  space-before-blocks: 2
+  spaced-comment: 2
+  wrap-iife: 2
+
+  default-case: 2
+  func-style: [2, "declaration"]

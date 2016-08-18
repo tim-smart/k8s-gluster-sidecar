@@ -1,0 +1,21 @@
+{
+  "name": "k8s-gluster-sidecar",
+  "version": "1.0.0",
+  "description": "Automatically configures a k8s glusterfs cluster",
+  "scripts": {
+    "start": "lib/run.js",
+    "build": "rm -r lib && ./node_modules/.bin/babel src -d lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tim Smart <tim@fostle.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.10.1",
+    "babel-preset-node5": "^11.1.0"
+  },
+  "dependencies": {
+    "bluebird": "^3.4.1",
+    "kubernetes-client": "^2.0.0",
+    "node-ssh": "^2.0.7"
+  }
+}
