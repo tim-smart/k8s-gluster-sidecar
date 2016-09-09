@@ -1,4 +1,3 @@
-import * as readiness from './lib/readiness.js';
 import * as k8s from './lib/k8s.js';
 import * as gluster from './lib/gluster.js';
 import * as env from './lib/env.js';
@@ -17,8 +16,6 @@ async function main() {
     }
     break;
   }
-
-  readiness.start();
 
   while (true) {
     // Poll every 10s
