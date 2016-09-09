@@ -53,8 +53,10 @@ async function main() {
       }
 
       const nonBrickIps = await gluster.notYetBrickIps(env.volumeName, peerIps);
-      const nonBricks = nonBrickIps.map(ip => `${ip}:${env.brickPath}`);
-      await gluster.run('volume', 'add-brick', env.volumeName, ...nonBricks);
+      if (nonBrickIps.length) {
+        const nonBricks = nonBrickIps.map(ip => `${ip}:${env.brickPath}`);
+        await gluster.run('volume', 'add-brick', env.volumeName, ...nonBricks);
+      }
     } catch (err) {
       console.error(err.stack);
     }
