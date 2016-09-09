@@ -46,20 +46,21 @@ async function main() {
       continue;
     }
 
-    try {
-      const peerIps = await gluster.peerStatusIps();
-      if (!peerIps.length) {
-        continue;
-      }
+    // try {
+    //   const peerIps = await gluster.peerStatusIps();
+    //   if (!peerIps.length) {
+    //     continue;
+    //   }
+    //   console.error(peerIps);
 
-      const nonBrickIps = await gluster.notYetBrickIps(env.volumeName, peerIps);
-      if (nonBrickIps.length) {
-        const nonBricks = nonBrickIps.map(ip => `${ip}:${env.brickPath}`);
-        await gluster.run('volume', 'add-brick', env.volumeName, ...nonBricks);
-      }
-    } catch (err) {
-      console.error(err.stack);
-    }
+    //   const nonBrickIps = await gluster.notYetBrickIps(env.volumeName, peerIps);
+    //   if (nonBrickIps.length) {
+    //     const nonBricks = nonBrickIps.map(ip => `${ip}:${env.brickPath}`);
+    //     await gluster.run('volume', 'add-brick', env.volumeName, ...nonBricks);
+    //   }
+    // } catch (err) {
+    //   console.error(err.stack);
+    // }
   }
 };
 
